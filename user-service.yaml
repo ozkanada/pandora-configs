@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: user-service
+  profiles:
+    active: localhost
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: 9788
+
+
+
+---
+spring:
+  profiles: localhost
+  cloud:
+    config:
+      url: http://localhost:8888
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_shema: pandora
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/pandora"
+    username: postgres
+    password: 123456
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+
+---
+spring:
+  profiles: stage
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_shema: pandora
+  datasource:
+    url: "jdbc:postgresql://postgres:5432/pandora"
+    username: pandora
+    password: Asdf@1234
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
